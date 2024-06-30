@@ -8,6 +8,27 @@ import {
 //Scene
 const scene = new THREE.Scene();
 
+// LoadingManager
+const loadingManager = new THREE.LoadingManager();
+loadingManager.onStart = () => {
+  console.log("Start");
+};
+loadingManager.onLoad = () => {
+  console.log("Loading...");
+};
+loadingManager.onProgress = () => {
+  console.log("Progress");
+};
+loadingManager.onError = () => {
+  console.log("Error!");
+};
+
+// textureLoader
+// const texture = new THREE.TextureLoader().load("/texture/color.jpg");
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const colorTexture = textureLoader.load("/texture/color.jpg");
+// const colorTwo = textureLoader.load("/texture/normal.jpg");
+
 //Resizing
 window.addEventListener("resize", () => {
   //Update Size
@@ -25,15 +46,7 @@ window.addEventListener("resize", () => {
 
 //Mesh
 const geometry = new THREE.PlaneGeometry(1, 1);
-// const geometry = new THREE.Geometry();
-// const verticesArray = new Float32Array([0, 0, 0, 0, 1, 0, 1, 0, 0]);
-// const positionAttribute = new THREE.BufferAttribute(verticesArray, 3);
-// geometry.setAttribute("position", positionAttribute);
-console.log(geometry);
-const material = new THREE.MeshBasicMaterial({
-  color: "purple",
-  wireframe: true,
-});
+const material = new THREE.MeshBasicMaterial({ map: colorTexture });
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
@@ -43,8 +56,7 @@ const aspect = {
   height: window.innerHeight,
 };
 const camera = new THREE.PerspectiveCamera(75, aspect.width / aspect.height);
-camera.position.set(2, 2, 2);
-camera.lookAt(mesh.position);
+camera.position.z = 1;
 scene.add(camera);
 
 //Renderer
