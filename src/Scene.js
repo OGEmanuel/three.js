@@ -1,19 +1,15 @@
-import { OrbitControls } from "@react-three/drei";
-import Custom from "./custom";
+import { useLoader } from "@react-three/fiber";
+import { TextureLoader } from "three";
 
 const Scene = () => {
+  const texture = useLoader(TextureLoader, "./img/1.png");
+
   return (
     <>
-      <OrbitControls />
-      {/* <axesHelper args={[3]} />
-      <gridHelper args={[20, 20, 0xff0000, "cyan"]} /> */}
-
-      <Custom />
-
-      {/* <mesh>
-        <boxGeometry />
-        <meshBasicMaterial color="orange" />
-      </mesh> */}
+      <mesh>
+        <planeGeometry args={[4, 4]} />
+        <meshBasicMaterial map={texture} />
+      </mesh>
     </>
   );
 };
