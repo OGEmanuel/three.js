@@ -4,25 +4,26 @@ import { Canvas } from "@react-three/fiber";
 import Scene from "./Scene";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+// const creatingCanvasHandler = (state) => {
+//   state.gl.setClearColor("cyan", 0.5);
+// };
+
 root.render(
-  //   <>
-  //     <div className="container">
-  <Canvas
-  // camera={{
-  //   fov: 45,
-  //   near: 0.1,
-  //   far: 100,
-  //   position: [2, 2, 5],
-  // }}
-  >
-    {/* <group> */}
-    <Scene />
-    {/* <mesh position={[2, 0, 0]} scale={1.5}>
-            <torusKnotGeometry />
-            <meshNormalMaterial />
-          </mesh> */}
-    {/* </group> */}
-  </Canvas>
-  //     </div>
-  //   </>
+  <>
+    <Canvas
+      // orthographic
+      gl={{ antialias: true, alpha: true }}
+      camera={{
+        fov: 45,
+        near: 0.1,
+        far: 100,
+        // zoom: 120,
+        position: [2, 2, 6],
+      }}
+      // onCreated={creatingCanvasHandler}
+    >
+      <Scene />
+    </Canvas>
+  </>
 );
