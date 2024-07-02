@@ -1,15 +1,16 @@
-import { useLoader } from "@react-three/fiber";
-import { TextureLoader } from "three";
+import { OrbitControls } from "@react-three/drei";
+import Particles from "./Particles";
 
 const Scene = () => {
-  const texture = useLoader(TextureLoader, "./img/1.png");
-
   return (
     <>
-      <mesh>
-        <planeGeometry args={[4, 4]} />
-        <meshBasicMaterial map={texture} />
-      </mesh>
+      <OrbitControls />
+
+      {/* <mesh>
+        <planeGeometry />
+        <meshBasicMaterial />
+      </mesh> */}
+      <Particles />
     </>
   );
 };
