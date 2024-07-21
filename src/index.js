@@ -7,12 +7,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
     <Canvas
-      shadows
       camera={{
-        fov: 75,
+        fov: 45,
         near: 0.1,
         far: 100,
-        position: [1, 3, 6],
+        position: [0, 2, 7],
       }}
     >
       <Scene />
