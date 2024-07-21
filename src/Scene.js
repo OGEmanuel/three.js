@@ -1,39 +1,44 @@
 import { OrbitControls } from "@react-three/drei";
-import Model from "./Model";
-import { Suspense } from "react";
-import Bike from "./Bike";
+import { button, useControls } from "leva";
 
 const Scene = () => {
+  const { position, color, wireframe, scale } = useControls("cube", {
+    position: {
+      value: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      min: -10,
+      max: 10,
+      step: 0.01,
+    },
+    color: "#ffffff",
+    wireframe: false,
+    click: button(() => {
+      console.log("clicked");
+    }),
+    scale: {
+      options: [1, 2, 3],
+    },
+  });
+
+  const sphereTweak = useControls("sphere", {
+    xPosition: 0,
+  });
+
   return (
     <>
-      {/* <mesh>
-        <planeGeometry args={[4, 4]} />
-        <meshBasicMaterial />
-      </mesh> */}
-      <ambientLight intensity={2} />
-      <directionalLight />
       <OrbitControls />
 
-      {/* <mesh>
+      <ambientLight />
+      <directionalLight position={[0, 2, 4]} />
+
+      <mesh position={[position.x, position.y, position.z]} scale={scale}>
         <boxGeometry />
-        <meshBasicMaterial />
-      </mesh> */}
-
-      <Suspense
-        fallback={
-          <mesh scale-y={2}>
-            <boxGeometry />
-            <meshBasicMaterial wireframe />
-          </mesh>
-        }
-      >
-        {/* {true ? <Model /> : ""} */}
-        <Model />
-      </Suspense>
-
-      {/* <Bike scale={0.85} position={[-0.5, 0.75, 0]} /> */}
+        <meshStandardMaterial color={color} wireframe={wireframe} />
+      </mesh>
     </>
   );
 };
-
 export default Scene;
