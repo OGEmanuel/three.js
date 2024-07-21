@@ -1,19 +1,13 @@
-import "./Style.css";
 import ReactDOM from "react-dom/client";
+import "./styles.css";
 import { Canvas } from "@react-three/fiber";
 import Scene from "./Scene";
 
-const root = ReactDOM.createRoot(document.querySelector("#root"));
-
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Canvas
-    camera={{
-      fov: 75,
-      near: 0.1,
-      far: 200,
-      position: [-3, 2, 4],
-    }}
-  >
-    <Scene />
-  </Canvas>
+  <>
+    <Canvas>
+      <Scene />
+    </Canvas>
+  </>
 );
