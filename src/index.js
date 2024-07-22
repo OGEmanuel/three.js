@@ -6,7 +6,14 @@ import Scene from "./Scene";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
-    <Canvas camera={{ position: [0, 2, 5], fov: 75 }}>
+    <Canvas
+      camera={{
+        fov: 45,
+        near: 0.1,
+        far: 100,
+        position: [1, 1, 6],
+      }}
+    >
       <Scene />
     </Canvas>
   </>
