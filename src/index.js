@@ -11,7 +11,7 @@ root.render(
         fov: 45,
         near: 0.1,
         far: 100,
-        position: [0, 2, 7],
+        position: [0, 0, 7],
       }}
     >
       <Scene />
