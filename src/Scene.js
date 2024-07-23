@@ -1,11 +1,5 @@
 import { OrbitControls } from "@react-three/drei";
-import { a, useSprings } from "@react-spring/three";
-
-// const items = [
-//   { position: [-1.5, 0, 0] },
-//   { position: [0, 0, 0] },
-//   { position: [1.5, 0, 0] },
-// ];
+import { a, useSprings, useTrail } from "@react-spring/three";
 
 const items = [
   {
@@ -23,38 +17,36 @@ const items = [
 ];
 
 const Scene = () => {
-  const springs = useSprings(
-    items.length,
-    items.map((item) => ({
-      from: { position: item.initialPosition },
-      to: { position: item.finalPosition },
-    }))
-    //   [
-    //   {
-    //     from: { position: [-3.5, 0, 0] },
-    //     to: { position: [-1.5, 0, 0] },
-    //   },
-    //   {
-    //     from: { position: [0, 3.5, 0] },
-    //     to: { position: [0, 0, 0] },
-    //   },
-    //   {
-    //     from: { position: [3.5, 0, 0] },
-    //     to: { position: [1.5, 0, 0] },
-    //   },
-    // ]
-  );
+  const [trail, api] = useTrail(3, () => ({
+    from: { scale: 0 },
+    // to: { scale: 0.6 },
+  }));
 
-  console.log(springs);
+  let active = true;
+
+  const missedHandler = () => {
+    if (active) {
+      active = false;
+      api.start({ to: { scale: 0.6 } });
+    } else {
+      active = true;
+      api.start({ to: { scale: 0 } });
+    }
+  };
 
   return (
     <>
       <OrbitControls />
 
-      {springs.map((item, i) => (
-        <a.mesh key={i} scale={0.5} position={item.position}>
+      {trail.map((item, i) => (
+        <a.mesh
+          key={Math.random()}
+          scale={item.scale}
+          position-x={-1 + i}
+          onPointerMissed={missedHandler}
+        >
           <boxGeometry />
-          <meshBasicMaterial color={"orange"} />
+          <meshBasicMaterial color="orange" />
         </a.mesh>
       ))}
     </>
