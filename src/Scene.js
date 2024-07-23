@@ -1,23 +1,47 @@
-import { animated, useSpring } from "@react-spring/three";
 import { useState } from "react";
+import { a, useSpring } from "@react-spring/three";
+import { useFrame } from "@react-three/fiber";
 
 const Scene = () => {
-  const [click, setClick] = useState(false);
-  const { scale, color } = useSpring({
-    from: { scale: click ? 1 : 2, color: click ? "orange" : "hotpink" },
-    to: { scale: click ? 2 : 1, color: click ? "hotpink" : "orange" },
+  // const [click, setClick] = useState(false);
+  useFrame(() => {
+    console.log(spring.x.get());
   });
 
-  // You don't have to name it scale
+  // const { scale, color } = useSpring({
+  //   from: { scale: click ? 1 : 2, color: click ? "orange" : "hotpink" },
+  //   scale: click ? 2 : 1,
+  //   color: click ? "hotpink" : "orange",
+  // });
 
-  console.log(scale);
+  // console.log(scale);
+
+  // const clickHandler = () => {
+  //   setClick(!click);
+  // };
+
+  const [spring, api] = useSpring(() => ({
+    from: { x: 0 },
+  }));
+
+  const handleClick = () => {
+    api.start({
+      to: { x: spring.x.get() === 1 ? 0 : 1 },
+    });
+  };
+
+  console.log(spring);
 
   return (
     <>
-      <animated.mesh onClick={() => setClick(!click)} scale={scale}>
+      {/* <a.mesh onClick={clickHandler} scale={scale}>
         <boxGeometry />
-        <animated.meshBasicMaterial color={color} />
-      </animated.mesh>
+        <a.meshBasicMaterial color={color} />
+      </a.mesh> */}
+      <a.mesh onClick={handleClick} position-x={spring.x}>
+        <boxGeometry />
+        <a.meshBasicMaterial color="orange" />
+      </a.mesh>
     </>
   );
 };
