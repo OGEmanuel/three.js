@@ -1,99 +1,62 @@
-import { useKeyboardControls } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { Debug, Physics, RigidBody } from "@react-three/rapier";
-import { useRef } from "react";
-import { Euler, Quaternion } from "three";
+import { InstancedRigidBodies, Physics, RigidBody } from "@react-three/rapier";
+import { useMemo } from "react";
+import { BoxGeometry } from "three";
+
 const PhysicsScene = () => {
-  const cubeRef = useRef();
-  const spinner = useRef();
-  const isJump = useRef(false);
+  const count = 300;
 
-  const allKeys = useKeyboardControls((keys) => keys);
-  console.log(allKeys);
+  const cubesTransformations = useMemo(() => {
+    const cubesPositions = [];
+    const cubesRotations = [];
+    const cubesScales = [];
 
-  const cubeMovementHandler = () => {
-    if (allKeys.forward) {
-      cubeRef.current.applyImpulse({ x: 0, y: 0, z: -0.3 });
+    for (let i = 0; i < count; i++) {
+      cubesPositions.push([
+        (Math.random() - 0.5) * 5,
+        Math.random() * 20,
+        (Math.random() - 0.5) * 5,
+      ]);
+      cubesRotations.push([0, 0, 0]);
+      cubesScales.push([0.5, 0.5, 0.5]);
     }
-    if (allKeys.backward) {
-      cubeRef.current.applyImpulse({ x: 0, y: 0, z: 0.3 });
-    }
-    if (allKeys.leftward) {
-      cubeRef.current.applyImpulse({ x: -0.3, y: 0, z: 0 });
-    }
-    if (allKeys.rightward) {
-      cubeRef.current.applyImpulse({ x: 0.3, y: 0, z: 0 });
-    }
-    if (isJump.current) {
-      if (allKeys.jump) {
-        cubeRef.current.applyImpulse({ x: 0, y: 40, z: 0 });
-        isJump.current = false;
-      }
-    }
-  };
 
-  const cubeClickHandler = () => {
-    cubeRef.current.applyImpulse({ x: -25, y: 0, z: 0 });
-  };
-
-  useFrame((state) => {
-    const getElapsedTime = state.clock.getElapsedTime();
-    // console.log(getElapsedTime);
-
-    //1) setNextKinematicTranslation({x:0,y:0,z:0}) //Moving
-    //2) setNextKinematicRotation()    //Rotating
-
-    // A) Moving the spinner
-    spinner.current.setNextKinematicTranslation({
-      x: 0,
-      y: Math.abs(Math.sin(getElapsedTime)),
-      z: 0,
-    });
-
-    // A) Rotating the spinner
-    const eulerRotationAngle = new Euler(0, getElapsedTime, 0);
-    const quaternionRotation = new Quaternion();
-    quaternionRotation.setFromEuler(eulerRotationAngle);
-    spinner.current.setNextKinematicRotation(quaternionRotation);
-    cubeMovementHandler();
-  });
-
+    return {
+      positions: cubesPositions,
+      rotations: cubesRotations,
+      scales: cubesScales,
+    };
+  }, []);
   return (
-    <>
-      <Physics>
-        <Debug />
-        <RigidBody
-          ref={cubeRef}
-          position={[2.5, 2.5, 0]}
-          onCollisionEnter={() => (isJump.current = true)}
-          onCollisionExit={() => (isJump.current = false)}
+    <Physics>
+      {/* <RigidBody>
+        <mesh
+          castShadow
+          position={[0, 1.5, 0]}
+          // geometry={new BoxGeometry(2, 2, 2)}
         >
-          <mesh castShadow onClick={cubeClickHandler}>
-            <boxGeometry args={[1.75, 1.75, 1.75]} />
-            <meshStandardMaterial color="#CC3941" />
-          </mesh>
-        </RigidBody>
+          <boxGeometry />
+          <meshStandardMaterial color="#CC3941" />
+        </mesh>
+      </RigidBody> */}
 
-        <RigidBody ref={spinner} position-y={-0.65} type={"kinematicPosition"}>
-          <mesh receiveShadow>
-            <boxGeometry args={[1, 0.35, 15]} />
-            <meshStandardMaterial color="orange" />
-          </mesh>
-        </RigidBody>
+      <RigidBody type="fixed">
+        <mesh position-y={-1} rotation-x={-Math.PI * 0.5} receiveShadow>
+          <boxGeometry args={[8, 8, 0.35]} />
+          <meshStandardMaterial color="#C7CAC7" />
+        </mesh>
+      </RigidBody>
 
-        <RigidBody
-          type="fixed"
-          position-y={-1}
-          rotation-x={-Math.PI * 0.5}
-          restitution={0.5}
-        >
-          <mesh receiveShadow>
-            <boxGeometry args={[15, 15, 0.35]} />
-            <meshStandardMaterial color="#C7CAC7" />
-          </mesh>
-        </RigidBody>
-      </Physics>
-    </>
+      <InstancedRigidBodies
+        positions={cubesTransformations.positions}
+        rotations={cubesTransformations.rotations}
+        scales={cubesTransformations.scales}
+      >
+        <instancedMesh args={[null, null, count]} castShadow>
+          <boxGeometry />
+          <meshStandardMaterial color={"#CC3941"} />
+        </instancedMesh>
+      </InstancedRigidBodies>
+    </Physics>
   );
 };
 
